@@ -144,6 +144,19 @@ export default function EditInvoiceForm({
               {state.errors?.status?.map((error, i) => (
                 <p key={i}>{error}</p>
               ))}
+
+              {/* here */}
+
+              {state.message && (
+                <div
+                  role="alert"
+                  aria-live="polite"
+                  className="mt-2 p-4 text-sm text-red-500"
+                >
+                  {state.message}
+                </div>
+              )}
+              {/* here */}
             </div>
           </div>
         </fieldset>
@@ -157,15 +170,6 @@ export default function EditInvoiceForm({
         </Link>
         <Button type="submit">Save Invoice</Button>
       </div>
-      {state.message && (
-        <div
-          role="alert"
-          aria-live="polite"
-          className="mt-4 rounded-md bg-red-50 p-4 text-sm text-red-700"
-        >
-          {state.message}
-        </div>
-      )}
     </form>
   );
 }
