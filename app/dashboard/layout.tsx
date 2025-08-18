@@ -1,4 +1,11 @@
 import SideNav from "@/app/ui/dashboard/sidenav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard | Acme",
+};
+
+
 
 export const experimental_ppr = true;
 
