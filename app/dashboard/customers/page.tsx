@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: { query?: string };
 }) {
   const query =
     typeof searchParams?.query === "string" ? searchParams.query : "";
