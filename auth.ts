@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import type { User } from "next-auth";
+import type { User } from "@/app/lib/definitions";
 import bcrypt from "bcrypt";
 import postgres from "postgres";
 
@@ -20,6 +20,7 @@ async function getUser(email: string): Promise<User | undefined> {
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  secret: process.env.NEXTAUTH_SECRET || "COdYFrU6HsM0+HVMXd/D4RLBPqIiXexqU7lAET3b/2Q=",
   providers: [
     Credentials({
       async authorize(credentials) {

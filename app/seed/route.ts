@@ -21,7 +21,10 @@ async function seedUsers() {
       return sql`
         INSERT INTO users (id, name, email, password)
         VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
+        ON CONFLICT (id) DO UPDATE SET
+          name = EXCLUDED.name,
+          email = EXCLUDED.email,
+          password = EXCLUDED.password;
       `;
     }),
   );
@@ -103,15 +106,21 @@ async function seedRevenue() {
 
 export async function GET() {
   try {
-    const result = await sql.begin((sql) => [
-      seedUsers(),
-      seedCustomers(),
-      seedInvoices(),
-      seedRevenue(),
-    ]);
+    console.log('Starting database seeding...');
+    console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
+    
+    await seedUsers();
+    await seedCustomers();
+    await seedInvoices();
+    await seedRevenue();
 
     return Response.json({ message: 'Database seeded successfully' });
   } catch (error) {
-    return Response.json({ error }, { status: 500 });
+    console.error('Seeding error:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return Response.json({ 
+      error: errorMessage,
+      details: error instanceof Error ? error.stack : undefined
+    }, { status: 500 });
   }
 }
