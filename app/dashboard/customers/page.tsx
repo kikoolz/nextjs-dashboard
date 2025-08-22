@@ -6,15 +6,40 @@ export const metadata: Metadata = {
   title: "Customers | Acme Dashboard",
 };
 
-export default async function Page({
+export default async function CustomersPage({
   searchParams,
 }: {
-  searchParams?: { query?: string };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const query =
-    typeof searchParams?.query === "string" ? searchParams.query : "";
+  const params = await searchParams;
 
-  const customers = await fetchFilteredCustomers(query);
+  
+  const query =
+    typeof params?.query === "string" ? params.query : "";
+
+  const start = Date.now();
+
+  let customers;
+  try {
+    customers = await fetchFilteredCustomers(query);
+  } catch (error) {
+    return (
+      <main>
+        <p>Failed to load customers. Please try again later.</p>
+      </main>
+    );
+  } finally {
+    const end = Date.now();
+    console.info(`Customer fetch attempt finished in ${end - start}ms`);
+  }
+
+  if (!customers || customers.length === 0) {
+    return (
+      <main>
+        <p>No customers found.</p>
+      </main>
+    );
+  }
 
   return (
     <main>
