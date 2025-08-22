@@ -11,8 +11,9 @@ export default async function Page({
 }: {
   searchParams?: { query?: string };
 }) {
+  const awaitedSearchParams = await searchParams;
   const query =
-    typeof searchParams?.query === "string" ? searchParams.query : "";
+    typeof awaitedSearchParams?.query === "string" ? awaitedSearchParams.query : "";
 
   const customers = await fetchFilteredCustomers(query);
 
