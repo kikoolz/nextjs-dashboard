@@ -9,12 +9,29 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: { query?: string };
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
   const query =
     typeof searchParams?.query === "string" ? searchParams.query : "";
 
-  const customers = await fetchFilteredCustomers(query);
+  let customers;
+  try {
+    customers = await fetchFilteredCustomers(query);
+  } catch (error) {
+    return (
+      <main>
+        <p>Failed to load customers. Please try again later.</p>
+      </main>
+    );
+  }
+
+  if (!customers || customers.length === 0) {
+    return (
+      <main>
+        <p>No customers found.</p>
+      </main>
+    );
+  }
 
   return (
     <main>
